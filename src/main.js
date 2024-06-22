@@ -1,18 +1,17 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   View,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Animated,
   Easing,
-} from 'react-native';
-import iconAdd from './images/add.png';
-import iconSetting from './images/setting.png';
-import iconEmail from './images/email.png';
-import iconPerson from './images/person.png';
-import iconAttach from './images/attach.png';
+} from "react-native";
+import iconAdd from "./images/add.png";
+import iconSetting from "./images/setting.png";
+import iconEmail from "./images/email.png";
+import iconPerson from "./images/person.png";
+import iconAttach from "./images/attach.png";
 
 class CircleButton extends Component {
   constructor() {
@@ -30,11 +29,8 @@ class CircleButton extends Component {
     this.bringToTopAnimated = new Animated.Value(0);
     this.bringToBottomAnimated = new Animated.Value(0);
     this.fadeAnimated = new Animated.Value(0);
+    this._button = this._button.bind(this);
     this._buttonCenter = this._buttonCenter.bind(this);
-    this._buttonTop = this._buttonTop.bind(this);
-    this._buttonRight = this._buttonRight.bind(this);
-    this._buttonBottom = this._buttonBottom.bind(this);
-    this._buttonLeft = this._buttonLeft.bind(this);
   }
 
   createAnimation(obj, toValue, duration, easing) {
@@ -67,66 +63,49 @@ class CircleButton extends Component {
     this.createAnimation(this.fadeAnimated, 0, 200);
   }
 
+  _button(onPress) {
+    this.setState({ isClicked: !this.state.isClicked });
+    this.endAnimation();
+    console.log("clicked");
+    onPress();
+  }
+
   _buttonCenter() {
     this.startAnimation();
-    this.setState({isClicked: !this.state.isClicked});
-
+    this.setState({ isClicked: !this.state.isClicked });
     if (this.state.isClicked) this.endAnimation();
   }
 
-  _buttonTop() {
-    this.setState({isClicked: !this.state.isClicked});
-    this.endAnimation();
-    this.props.onPressButtonTop();
-  }
-
-  _buttonRight() {
-    this.setState({isClicked: !this.state.isClicked});
-    this.endAnimation();
-    this.props.onPressButtonRight();
-  }
-
-  _buttonBottom() {
-    this.setState({isClicked: !this.state.isClicked});
-    this.endAnimation();
-    this.props.onPressButtonBottom();
-  }
-  _buttonLeft() {
-    this.setState({isClicked: !this.state.isClicked});
-    this.endAnimation();
-    this.props.onPressButtonLeft();
-  }
-
   render() {
-    const {size, primaryColor, secondaryColor} = this.props;
+    const { size, primaryColor, secondaryColor } = this.props;
 
     const styles = StyleSheet.create({
       container: {
         flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
       },
       buttonWrapper: {
         right: size * 2 - 10,
       },
       buttonLeft: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         width: size - 5,
         height: size - 5,
         borderRadius: 360,
       },
       buttonRight: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         width: size - 5,
         height: size - 5,
         borderRadius: 360,
       },
       buttonCenter: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         width: size,
         height: size,
         borderRadius: 360,
@@ -134,23 +113,23 @@ class CircleButton extends Component {
       },
       buttonTop: {
         right: -size * 2 + 7,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         width: size - 5,
         height: size - 5,
         borderRadius: 360,
       },
       buttonBottom: {
         right: size - 7,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         width: size - 5,
         height: size - 5,
         borderRadius: 360,
       },
       text: {
-        color: '#EECE69',
-        fontWeight: 'bold',
+        color: "#EECE69",
+        fontWeight: "bold",
         letterSpacing: 1,
       },
       centerImage: {
@@ -162,9 +141,9 @@ class CircleButton extends Component {
         height: size - 15,
       },
       circle: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         borderRadius: 360,
         backgroundColor: secondaryColor,
       },
@@ -172,7 +151,7 @@ class CircleButton extends Component {
 
     const rotateMe = this.rotateAnimated.interpolate({
       inputRange: [0, 1, 2],
-      outputRange: ['0deg', '45deg', '0deg'],
+      outputRange: ["0deg", "45deg", "0deg"],
     });
 
     const scaleMe = this.scaleAnimated.interpolate({
@@ -210,64 +189,60 @@ class CircleButton extends Component {
       outputRange: [0, 1],
     });
 
+    const childStyle = [styles.childImage, { opacity: fadeInOut }];
     return (
       <View style={styles.container}>
         <Animated.View
-          style={[styles.circle, {width: scaleMe, height: scaleMe}]}>
-          <Animated.View style={{top: bringMeToTop}}>
+          style={[styles.circle, { width: scaleMe, height: scaleMe }]}
+        >
+          <Animated.View style={{ top: bringMeToTop }}>
             <TouchableOpacity
-              onPress={this._buttonTop}
+              onPress={() => this._button(this.props.top.onPress)}
               activeOpacity={1}
-              style={styles.buttonTop}>
-              <Animated.Image
-                source={this.props.iconButtonTop}
-                style={[styles.childImage, {opacity: fadeInOut}]}
-              />
+              style={styles.buttonTop}
+            >
+              {this.props.top.component(childStyle)}
             </TouchableOpacity>
           </Animated.View>
-          <Animated.View style={{left: bringMeToLeft}}>
+          <Animated.View style={{ left: bringMeToLeft }}>
             <TouchableOpacity
-              onPress={this._buttonLeft}
+              onPress={() => this._button(this.props.left.onPress)}
               activeOpacity={1}
-              style={styles.buttonLeft}>
-              <Animated.Image
-                source={this.props.iconButtonLeft}
-                style={[styles.childImage, {opacity: fadeInOut}]}
-              />
+              style={styles.buttonLeft}
+            >
+              {this.props.left.component(childStyle)}
             </TouchableOpacity>
           </Animated.View>
-          <Animated.View style={{left: bringMeToRight}}>
+          <Animated.View style={{ left: bringMeToRight }}>
             <TouchableOpacity
-              onPress={this._buttonRight}
+              onPress={() => this._button(this.props.right.onPress)}
               activeOpacity={1}
-              style={styles.buttonRight}>
-              <Animated.Image
-                source={this.props.iconButtonRight}
-                style={[styles.childImage, {opacity: fadeInOut}]}
-              />
+              style={styles.buttonRight}
+            >
+              {this.props.right.component(childStyle)}
             </TouchableOpacity>
           </Animated.View>
-          <Animated.View style={{top: bringMeToBottom}}>
+          <Animated.View style={{ top: bringMeToBottom }}>
             <TouchableOpacity
-              onPress={this._buttonBottom}
+              onPress={() => this._button(this.props.bottom.onPress)}
               activeOpacity={1}
-              style={styles.buttonBottom}>
-              <Animated.Image
-                source={this.props.iconButtonBottom}
-                style={[styles.childImage, {opacity: fadeInOut}]}
-              />
+              style={styles.buttonBottom}
+            >
+              {this.props.bottom.component(childStyle)}
             </TouchableOpacity>
           </Animated.View>
           <Animated.View
-            style={[styles.buttonWrapper, {transform: [{rotate: rotateMe}]}]}>
+            style={[
+              styles.buttonWrapper,
+              { transform: [{ rotate: rotateMe }] },
+            ]}
+          >
             <TouchableOpacity
               onPress={this._buttonCenter}
               activeOpacity={1}
-              style={styles.buttonCenter}>
-              <Animated.Image
-                source={this.props.iconButtonCenter}
-                style={styles.centerImage}
-              />
+              style={styles.buttonCenter}
+            >
+              {this.props.center.component(styles.centerImage)}
             </TouchableOpacity>
           </Animated.View>
         </Animated.View>
@@ -278,32 +253,38 @@ class CircleButton extends Component {
 
 CircleButton.defaultProps = {
   size: 40,
-  onPressButtonTop: () => {},
-  onPressButtonRight: () => {},
-  onPressButtonBottom: () => {},
-  onPressButtonLeft: () => {},
-  iconButtonCenter: iconAdd,
-  iconButtonTop: iconPerson,
-  iconButtonRight: iconAttach,
-  iconButtonBottom: iconSetting,
-  iconButtonLeft: iconEmail,
-  primaryColor: '#41727E',
-  secondaryColor: '#459186',
+  primaryColor: "#41727E",
+  secondaryColor: "#459186",
+  center: {
+    component: (style) => <Animated.Image source={iconAdd} style={style} />,
+    onPress: () => {},
+  },
+  left: {
+    component: (style) => <Animated.Image source={iconAttach} style={style} />,
+    onPress: () => {},
+  },
+  right: {
+    component: (style) => <Animated.Image source={iconEmail} style={style} />,
+    onPress: () => {},
+  },
+  top: {
+    component: (style) => <Animated.Image source={iconPerson} style={style} />,
+    onPress: () => {},
+  },
+  bottom: {
+    component: (style) => <Animated.Image source={iconSetting} style={style} />,
+    onPress: () => {},
+  },
 };
 
 CircleButton.propTypes = {
   size: PropTypes.number,
-  onPressButtonTop: PropTypes.func,
-  onPressButtonRight: PropTypes.func,
-  onPressButtonBottom: PropTypes.func,
-  onPressButtonLeft: PropTypes.func,
-  iconButtonCenter: PropTypes.number,
-  iconButtonTop: PropTypes.number,
-  iconButtonRight: PropTypes.number,
-  iconButtonBottom: PropTypes.number,
-  iconButtonLeft: PropTypes.number,
   primaryColor: PropTypes.string,
   secondaryColor: PropTypes.string,
+  center: PropTypes.object,
+  left: PropTypes.object,
+  right: PropTypes.object,
+  top: PropTypes.object,
+  bottom: PropTypes.object,
 };
-
 module.exports = CircleButton;
