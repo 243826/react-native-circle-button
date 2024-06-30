@@ -8,10 +8,10 @@ import {
   Easing,
 } from "react-native";
 import iconAdd from "./images/add.png";
-import iconSetting from "./images/setting.png";
+import iconAttach from "./images/attach.png";
 import iconEmail from "./images/email.png";
 import iconPerson from "./images/person.png";
-import iconAttach from "./images/attach.png";
+import iconSetting from "./images/setting.png";
 
 class CircleButton extends Component {
   constructor() {
@@ -33,11 +33,12 @@ class CircleButton extends Component {
     this._buttonCenter = this._buttonCenter.bind(this);
   }
 
-  createAnimation(obj, toValue, duration, easing) {
+  createAnimation(obj, toValue, duration) {
     return Animated.timing(obj, {
       toValue,
       duration,
       easing: Easing.linear,
+      useNativeDriver: false,
     }).start();
   }
 
@@ -66,7 +67,6 @@ class CircleButton extends Component {
   _button(onPress) {
     this.setState({ isClicked: !this.state.isClicked });
     this.endAnimation();
-    console.log("clicked");
     onPress();
   }
 
@@ -249,6 +249,13 @@ class CircleButton extends Component {
       </View>
     );
   }
+}
+
+function removeOpacity(style) {
+  if (Array.isArray(style)) {
+    style = style.filter((o) => o.opacity === undefined);
+  }
+  return style;
 }
 
 CircleButton.defaultProps = {
