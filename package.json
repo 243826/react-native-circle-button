@@ -28,7 +28,8 @@
   },
   "homepage": "https://github.com/dwicao/react-native-circle-button#readme",
   "dependencies": {
-    "prop-types": "^15.6.1"
+    "prop-types": "^15.6.1",
+    "react-native-circle-button": "file:"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
